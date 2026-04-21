@@ -1,0 +1,11 @@
+-- This project now uses two PostgreSQL databases.
+-- Apply the matching schema file to each database:
+--
+--   Accounts database -> database/accounts_schema.sql
+--   Products database -> database/products_schema.sql
+--
+-- Or run:
+--
+--   node setup-db.js
+--
+-- to create both databases, tables, and sample seed data automatically.
