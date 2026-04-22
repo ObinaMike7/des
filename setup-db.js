@@ -3,7 +3,7 @@ import path from 'path'
 import bcrypt from 'bcryptjs'
 import pkg from 'pg'
 import { fileURLToPath } from 'url'
-import { baseDbConfig, databaseNames } from './backend/db.js'
+import { buildDbConfig, databaseNames, isConnectionStringMode } from './backend/db.js'
 
 const { Client } = pkg
 
@@ -17,12 +17,12 @@ const schemaPaths = {
 
 const quoteIdentifier = (value) => `"${String(value).replaceAll('"', '""')}"`
 const legacyProductsDatabase = process.env.LEGACY_PRODUCTS_DB_NAME || 'inventory_products'
+const canCreateDatabases = !isConnectionStringMode
+
+const createClient = (database) => new Client(buildDbConfig(database))
 
 const ensureDatabaseExists = async (database) => {
-  const maintenanceClient = new Client({
-    ...baseDbConfig,
-    database: 'postgres',
-  })
+  const maintenanceClient = createClient('postgres')
 
   await maintenanceClient.connect()
 
@@ -45,10 +45,7 @@ const ensureDatabaseExists = async (database) => {
 }
 
 const databaseExists = async (database) => {
-  const maintenanceClient = new Client({
-    ...baseDbConfig,
-    database: 'postgres',
-  })
+  const maintenanceClient = createClient('postgres')
 
   await maintenanceClient.connect()
 
@@ -66,10 +63,7 @@ const databaseExists = async (database) => {
 
 const applySchema = async (database, schemaPath) => {
   const schema = await fs.readFile(schemaPath, 'utf8')
-  const client = new Client({
-    ...baseDbConfig,
-    database,
-  })
+  const client = createClient(database)
 
   await client.connect()
 
@@ -82,10 +76,7 @@ const applySchema = async (database, schemaPath) => {
 }
 
 const seedAccounts = async () => {
-  const client = new Client({
-    ...baseDbConfig,
-    database: databaseNames.accounts,
-  })
+  const client = createClient(databaseNames.accounts)
 
   await client.connect()
 
@@ -126,6 +117,10 @@ const seedAccounts = async () => {
 }
 
 const migrateLegacyProducts = async (targetDatabase) => {
+  if (!canCreateDatabases) {
+    return
+  }
+
   if (legacyProductsDatabase === targetDatabase) {
     return
   }
@@ -136,15 +131,8 @@ const migrateLegacyProducts = async (targetDatabase) => {
     return
   }
 
-  const sourceClient = new Client({
-    ...baseDbConfig,
-    database: legacyProductsDatabase,
-  })
-
-  const targetClient = new Client({
-    ...baseDbConfig,
-    database: targetDatabase,
-  })
+  const sourceClient = createClient(legacyProductsDatabase)
+  const targetClient = createClient(targetDatabase)
 
   await sourceClient.connect()
   await targetClient.connect()
@@ -238,10 +226,14 @@ const setupDatabase = async () => {
   try {
     console.log('Preparing configured inventory databases...')
 
-    await ensureDatabaseExists(databaseNames.accounts)
+    if (canCreateDatabases) {
+      await ensureDatabaseExists(databaseNames.accounts)
 
-    if (databaseNames.products !== databaseNames.accounts) {
-      await ensureDatabaseExists(databaseNames.products)
+      if (databaseNames.products !== databaseNames.accounts) {
+        await ensureDatabaseExists(databaseNames.products)
+      }
+    } else {
+      console.log('Using a managed PostgreSQL connection (DATABASE_URL). Skipping CREATE DATABASE checks.')
     }
 
     await applySchema(databaseNames.accounts, schemaPaths.accounts)

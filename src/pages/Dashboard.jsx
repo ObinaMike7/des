@@ -172,15 +172,7 @@ function Dashboard({ setIsLoggedIn, isAdmin }) {
     <div className="min-h-screen bg-slate-100">
       <header className="bg-slate-900 px-8 py-4 text-white shadow-lg">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500 text-lg font-bold text-white">
-              IS
-            </div>
-            <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Inventory system</p>
-              <h1 className="text-2xl font-bold">Welcome{isAdmin ? ' Admin' : ''}!</h1>
-            </div>
-          </div>
+          <h1 className="text-2xl font-bold">Welcome{isAdmin ? ' Admin' : ''}!</h1>
           <button
             onClick={handleLogout}
             className="rounded-2xl border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"

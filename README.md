@@ -11,6 +11,18 @@ npm run server
 npm run dev
 ```
 
+## Supabase setup (optional)
+
+1. Copy `.env.example` to `.env`.
+2. Set `DATABASE_URL` to your Supabase PostgreSQL connection string.
+3. Set:
+   - `DB_SSL=true`
+   - `DB_SSL_REJECT_UNAUTHORIZED=false`
+   - `DB_NAME=postgres`
+   - `ACCOUNTS_DB_NAME=postgres`
+   - `PRODUCTS_DB_NAME=postgres`
+4. Run `node setup-db.js` to apply schema and seed data.
+
 ## Database layout
 
 The app is currently configured to use the same PostgreSQL database, `inventory`, for:

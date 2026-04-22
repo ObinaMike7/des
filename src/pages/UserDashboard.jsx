@@ -1,6 +1,22 @@
 import { useEffect, useState } from 'react'
 import { getProducts } from '../lib/productApi'
 import { formatCurrency } from '../lib/productUtils'
+import heroImage from '../assets/hero.png'
+
+// Put your image files in: public/product-images/
+// File names below are based on your item number.
+const productImageMap = {
+  '11110': '/product-images/11110.png',
+  '11111': '/product-images/11111.png',
+  '11112': '/product-images/11112.png',
+  '11113': '/product-images/11113.png',
+  '11114': '/product-images/11114.png',
+  '11115': '/product-images/11115.png',
+  '11116': '/product-images/11116.png',
+  '11117': '/product-images/11117.png',
+  '11118': '/product-images/11118.png',
+  '11119': '/product-images/11119.png',
+}
 
 function UserDashboard({ setIsLoggedIn }) {
   const [searchQuery, setSearchQuery] = useState('')
@@ -62,14 +78,26 @@ function UserDashboard({ setIsLoggedIn }) {
     { key: 'in', label: 'In Stock', value: products.filter((product) => product.quantity > 0).length, color: 'bg-green-600' },
   ]
 
+  const getProductImage = (product) => {
+    if (typeof product.image_url === 'string' && product.image_url.trim()) {
+      return product.image_url.trim()
+    }
+
+    const mappedImage = productImageMap[product.item_number]
+
+    if (mappedImage) {
+      return mappedImage
+    }
+
+    return heroImage
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-blue-700 px-8 py-4 text-white">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white font-bold text-blue-700">
-              IS
-            </div>
+            
             <h1 className="text-2xl font-bold">Inventory System</h1>
           </div>
           <div className="flex items-center gap-3">
@@ -153,8 +181,17 @@ function UserDashboard({ setIsLoggedIn }) {
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {filteredProducts.map((product) => (
                 <div key={product.id} className="rounded-2xl border border-gray-200 bg-gray-50 p-6 transition hover:-translate-y-1 hover:shadow-lg">
-                  <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-blue-100 text-2xl font-bold text-blue-800">
-                    {product.name.slice(0, 2).toUpperCase()}
+                  <div className="mb-4 overflow-hidden rounded-2xl border border-gray-200 bg-white">
+                    <img
+                      src={getProductImage(product)}
+                      alt={`${product.name} product`}
+                      loading="lazy"
+                      onError={(event) => {
+                        event.currentTarget.onerror = null
+                        event.currentTarget.src = heroImage
+                      }}
+                      className="h-44 w-full object-cover"
+                    />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
                   <p className="mt-1 text-sm text-gray-500">Item #{product.item_number}</p>

@@ -13,6 +13,21 @@ The project is currently configured to use your existing PostgreSQL database:
 - `ACCOUNTS_DB_NAME=inventory`
 - `PRODUCTS_DB_NAME=inventory`
 
+If you want to use Supabase PostgreSQL instead, set these in `.env`:
+
+- `DATABASE_URL=postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres`
+- `DB_SSL=true`
+- `DB_SSL_REJECT_UNAUTHORIZED=false`
+- `ACCOUNTS_DB_NAME=postgres`
+- `PRODUCTS_DB_NAME=postgres`
+- `DB_NAME=postgres`
+
+Notes:
+
+- Keep `JWT_SECRET` and `PORT` as-is.
+- The backend now supports both local PostgreSQL (`DB_HOST`, `DB_USER`, etc.) and connection-string mode (`DATABASE_URL`).
+- When `DATABASE_URL` is present, `setup-db.js` skips `CREATE DATABASE` and only applies schema + seed data.
+
 ### 3. Create and seed both databases
 Run:
 ```bash

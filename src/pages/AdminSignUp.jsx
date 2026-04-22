@@ -6,7 +6,6 @@ function AdminSignUp({ setIsLoggedIn, setCurrentPage, setIsAdmin }) {
     email: '',
     password: '',
     confirmPassword: '',
-    adminCode: '',
   })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -24,8 +23,8 @@ function AdminSignUp({ setIsLoggedIn, setCurrentPage, setIsAdmin }) {
   const handleAdminSignUp = async (e) => {
     e.preventDefault()
 
-    if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword || !formData.adminCode) {
-      setError('Please fill in all fields including admin code')
+    if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
+      setError('Please fill in all fields')
       return
     }
 
@@ -46,12 +45,6 @@ function AdminSignUp({ setIsLoggedIn, setCurrentPage, setIsAdmin }) {
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match')
-      return
-    }
-
-    // Admin code validation (you can change this to any code you want)
-    if (formData.adminCode !== 'ADMIN2024') {
-      setError('Invalid admin code. Please enter the correct admin registration code.')
       return
     }
 
@@ -93,7 +86,6 @@ function AdminSignUp({ setIsLoggedIn, setCurrentPage, setIsAdmin }) {
           email: '',
           password: '',
           confirmPassword: '',
-          adminCode: '',
         })
         setSuccess('')
       }, 1500)
@@ -173,19 +165,6 @@ function AdminSignUp({ setIsLoggedIn, setCurrentPage, setIsAdmin }) {
               placeholder="Confirm your password"
               className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-slate-900"
             />
-          </div>
-
-          <div>
-            <label className="block text-slate-700 font-semibold mb-2">Admin Code</label>
-            <input
-              type="password"
-              name="adminCode"
-              value={formData.adminCode}
-              onChange={handleChange}
-              placeholder="Enter admin registration code"
-              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-slate-900"
-            />
-            <p className="text-xs text-slate-500 mt-2">*Required to verify admin privileges</p>
           </div>
 
           <button

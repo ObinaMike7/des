@@ -72,10 +72,10 @@ function SignIn({ setIsLoggedIn, isAdmin, setIsAdmin, setCurrentPage }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center">
-      <div className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-blue-800 via-blue-900 to-slate-950 flex items-center justify-center">
+      <div className="bg-stone-100 rounded-3xl shadow-2xl p-8 w-full max-w-md">
         <div className="flex justify-center mb-8">
-          <div className="bg-blue-700 text-white rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold">✓</div>
+          <div className="bg-blue-900 text-white rounded-full w-16 h-16 flex items-center justify-center text-3xl font-bold">✓</div>
         </div>
 
         <h1 className="text-4xl font-bold text-center text-slate-900 mb-2">Inventory System</h1>
@@ -90,11 +90,11 @@ function SignIn({ setIsLoggedIn, isAdmin, setIsAdmin, setCurrentPage }) {
             }}
             className={`flex-1 py-3 rounded-xl font-semibold transition ${
               !isAdmin
-                ? 'bg-blue-700 text-white'
+                ? 'bg-blue-900 text-white'
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
           >
-            User Login
+            User 
           </button>
           <button
             type="button"
@@ -104,11 +104,11 @@ function SignIn({ setIsLoggedIn, isAdmin, setIsAdmin, setCurrentPage }) {
             }}
             className={`flex-1 py-3 rounded-xl font-semibold transition ${
               isAdmin
-                ? 'bg-blue-700 text-white'
+                ? 'bg-blue-900 text-white'
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
           >
-            Admin Login
+            Admin
           </button>
         </div>
 
@@ -129,7 +129,7 @@ function SignIn({ setIsLoggedIn, isAdmin, setIsAdmin, setCurrentPage }) {
                 setError('')
               }}
               placeholder="Enter your email"
-              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-blue-700"
             />
           </div>
 
@@ -143,31 +143,31 @@ function SignIn({ setIsLoggedIn, isAdmin, setIsAdmin, setCurrentPage }) {
                 setError('')
               }}
               placeholder="Enter your password"
-              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-blue-500"
+              className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-blue-700"
             />
           </div>
 
           <div className="flex items-center">
-            <input type="checkbox" id="remember" className="w-4 h-4 text-blue-700" />
+            <input type="checkbox" id="remember" className="w-4 h-4 text-blue-900" />
             <label htmlFor="remember" className="ml-2 text-slate-600">Remember me</label>
           </div>
 
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-700 text-white py-3 rounded-xl font-bold hover:bg-blue-800 transition disabled:bg-slate-400"
-          >
-            {loading ? 'Signing in...' : isAdmin ? 'Admin Sign In' : 'Sign In'}
-          </button>
+  type="submit"
+  disabled={loading}
+  className="w-full bg-blue-900 text-white py-3 rounded-xl font-bold hover:bg-blue-950 transition disabled:bg-slate-400"
+>
+  {loading ? 'Logging in...' : 'Log in'}
+</button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-slate-600">
             Don't have an account? 
             {isAdmin ? (
-              <button type="button" onClick={() => setCurrentPage('adminsignup')} className="text-blue-700 font-semibold cursor-pointer hover:underline"> Admin Sign up</button>
+              <button type="button" onClick={() => setCurrentPage('adminsignup')} className="text-blue-800 font-semibold cursor-pointer hover:underline"> Admin Sign up</button>
             ) : (
-              <button type="button" onClick={() => setCurrentPage('signup')} className="text-blue-700 font-semibold cursor-pointer hover:underline"> Sign up</button>
+              <button type="button" onClick={() => setCurrentPage('signup')} className="text-blue-800 font-semibold cursor-pointer hover:underline"> Sign up</button>
             )}
           </p>
         </div>
@@ -177,3 +177,4 @@ function SignIn({ setIsLoggedIn, isAdmin, setIsAdmin, setCurrentPage }) {
 }
 
 export default SignIn
+
