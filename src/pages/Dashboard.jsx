@@ -22,10 +22,6 @@ function Dashboard({ setIsLoggedIn, isAdmin }) {
   const [formData, setFormData] = useState(emptyProductForm)
   const [editFormData, setEditFormData] = useState(emptyEditProductForm)
 
-  useEffect(() => {
-    fetchProducts()
-  }, [])
-
   const fetchProducts = async () => {
     try {
       setLoading(true)
@@ -39,6 +35,10 @@ function Dashboard({ setIsLoggedIn, isAdmin }) {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
 
   const clearSuccessMessage = () => {
     window.setTimeout(() => setSuccess(''), 3000)
@@ -169,7 +169,7 @@ function Dashboard({ setIsLoggedIn, isAdmin }) {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className={`min-h-screen ${isAdmin ? 'bg-[#4E6688]' : 'bg-slate-100'}`}>
       <header className="bg-slate-900 px-8 py-4 text-white shadow-lg">
         <div className="flex items-center justify-between gap-4">
           <h1 className="text-2xl font-bold">Welcome{isAdmin ? ' Admin' : ''}!</h1>
@@ -277,7 +277,7 @@ function Dashboard({ setIsLoggedIn, isAdmin }) {
                   </tr>
                 )}
                 {!loading && filteredProducts.map((product, idx) => (
-                  <tr key={product.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                  <tr key={product.id} className={idx % 2 === 0 ? 'bg-slate-50' : 'bg-slate-100'}>
                     <td className="border-t border-slate-200 px-6 py-4 text-slate-900">{product.item_number}</td>
                     <td className="border-t border-slate-200 px-6 py-4 text-slate-900">{product.name}</td>
                     <td className="border-t border-slate-200 px-6 py-4 text-slate-900">{product.quantity}</td>

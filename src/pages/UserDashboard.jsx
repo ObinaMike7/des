@@ -25,10 +25,6 @@ function UserDashboard({ setIsLoggedIn }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    fetchProducts()
-  }, [])
-
   const fetchProducts = async () => {
     try {
       setLoading(true)
@@ -42,6 +38,10 @@ function UserDashboard({ setIsLoggedIn }) {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
 
   const handleLogout = () => {
     localStorage.removeItem('token')

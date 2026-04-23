@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_BASE_URL } from '../lib/apiBaseUrl'
 
 function SignIn({ setIsLoggedIn, isAdmin, setIsAdmin, setCurrentPage }) {
   const [email, setEmail] = useState('')
@@ -22,7 +23,7 @@ function SignIn({ setIsLoggedIn, isAdmin, setIsAdmin, setCurrentPage }) {
     setLoading(true)
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/signin', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
