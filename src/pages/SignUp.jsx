@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { API_BASE_URL } from '../lib/apiBaseUrl'
+import { signUp } from '../lib/authApi'
 
 function SignUp({ setIsLoggedIn, setCurrentPage }) {
   const [formData, setFormData] = useState({
@@ -52,26 +52,12 @@ function SignUp({ setIsLoggedIn, setCurrentPage }) {
     setLoading(true)
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          role: 'user',
-        }),
+      const data = await signUp({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        role: 'user',
       })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        setError(data.error || 'Signup failed')
-        setLoading(false)
-        return
-      }
 
       // Store token in localStorage
       localStorage.setItem('token', data.token)
@@ -91,7 +77,7 @@ function SignUp({ setIsLoggedIn, setCurrentPage }) {
       }, 1500)
     } catch (error) {
       console.error('Signup error:', error)
-      setError('Failed to connect to server. Make sure the backend is running.')
+      setError(error.message || 'Failed to connect to server. Make sure the backend is running.')
       setLoading(false)
     }
   }

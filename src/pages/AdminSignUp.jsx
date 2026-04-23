@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { API_BASE_URL } from '../lib/apiBaseUrl'
+import { signUp } from '../lib/authApi'
 
 function AdminSignUp({ setIsLoggedIn, setCurrentPage, setIsAdmin }) {
   const [formData, setFormData] = useState({
@@ -52,26 +52,12 @@ function AdminSignUp({ setIsLoggedIn, setCurrentPage, setIsAdmin }) {
     setLoading(true)
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          role: 'admin',
-        }),
+      const data = await signUp({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        role: 'admin',
       })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        setError(data.error || 'Signup failed')
-        setLoading(false)
-        return
-      }
 
       // Store token in localStorage
       localStorage.setItem('token', data.token)
@@ -92,7 +78,7 @@ function AdminSignUp({ setIsLoggedIn, setCurrentPage, setIsAdmin }) {
       }, 1500)
     } catch (error) {
       console.error('Admin signup error:', error)
-      setError('Failed to connect to server. Make sure the backend is running.')
+      setError(error.message || 'Failed to connect to server. Make sure the backend is running.')
       setLoading(false)
     }
   }

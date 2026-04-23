@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { API_BASE_URL } from '../lib/apiBaseUrl'
+import { signIn } from '../lib/authApi'
 
 function SignIn({ setIsLoggedIn, isAdmin, setIsAdmin, setCurrentPage }) {
   const [email, setEmail] = useState('')
@@ -23,24 +23,7 @@ function SignIn({ setIsLoggedIn, isAdmin, setIsAdmin, setCurrentPage }) {
     setLoading(true)
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        setError(data.error || 'Sign in failed')
-        setLoading(false)
-        return
-      }
+      const data = await signIn({ email, password })
 
       // Check if user is admin
       const isUserAdmin = data.user.role === 'admin'
@@ -67,7 +50,7 @@ function SignIn({ setIsLoggedIn, isAdmin, setIsAdmin, setCurrentPage }) {
       setError('')
     } catch (error) {
       console.error('Sign in error:', error)
-      setError('Failed to connect to server. Make sure the backend is running.')
+      setError(error.message || 'Failed to connect to server. Make sure the backend is running.')
       setLoading(false)
     }
   }
