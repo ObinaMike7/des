@@ -1,49 +1,54 @@
-import { API_BASE_URL } from './apiBaseUrl'
-import { requestJson } from './request'
-
-const PRODUCTS_API_URL = `${API_BASE_URL}/api/products`
+import { supabase } from './supabase'
 
 export const getProducts = async () => {
-  return requestJson(PRODUCTS_API_URL, undefined, 'Failed to fetch products')
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return data
 }
 
 export const addProduct = async (product) => {
-  return requestJson(
-    PRODUCTS_API_URL,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(product),
-    },
-    'Failed to add product'
-  )
+  const { data, error } = await supabase
+    .from('products')
+    .insert([product])
+    .select()
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return data[0]
 }
 
 export const updateProduct = async (productId, product) => {
-  return requestJson(
-    `${PRODUCTS_API_URL}/${productId}`,
-    {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(product),
-    },
-    'Failed to update product'
-  )
+  const { data, error } = await supabase
+    .from('products')
+    .update(product)
+    .eq('id', productId)
+    .select()
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return data[0]
 }
 
 export const deleteProduct = async (productId) => {
-  return requestJson(
-    `${PRODUCTS_API_URL}/${productId}`,
-    {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-    'Failed to delete product'
-  )
+  const { error } = await supabase
+    .from('products')
+    .delete()
+    .eq('id', productId)
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return { id: productId }
 }

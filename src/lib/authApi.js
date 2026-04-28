@@ -1,31 +1,66 @@
-import { API_BASE_URL } from './apiBaseUrl'
-import { requestJson } from './request'
+import { supabase } from './supabase'
 
-const AUTH_API_URL = `${API_BASE_URL}/api/auth`
+export const signIn = async ({ email, password }) => {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
 
-export const signIn = async (payload) =>
-  requestJson(
-    `${AUTH_API_URL}/signin`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  // Get user role from custom metadata or a user table
+  const { data: userData } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', email)
+    .single()
+
+  return {
+    token: data.session.access_token,
+    user: {
+      id: data.user.id,
+      email: data.user.email,
+      role: userData?.role || 'user',
     },
-    'Sign in failed'
-  )
+  }
+}
 
-export const signUp = async (payload) =>
-  requestJson(
-    `${AUTH_API_URL}/signup`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+export const signUp = async ({ email, password, username, role = 'user' }) => {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        username,
       },
-      body: JSON.stringify(payload),
     },
-    'Signup failed'
-  )
+  })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  // Create user record in users table
+  if (data.user) {
+    await supabase.from('users').insert([
+      {
+        id: data.user.id,
+        email,
+        username,
+        role,
+      },
+    ])
+  }
+
+  return {
+    token: data.session?.access_token,
+    user: {
+      id: data.user.id,
+      email: data.user.email,
+      role,
+    },
+  }
+}
 
