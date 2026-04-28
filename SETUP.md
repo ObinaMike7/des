@@ -27,6 +27,7 @@ Notes:
 - Keep `JWT_SECRET` and `PORT` as-is.
 - The backend now supports both local PostgreSQL (`DB_HOST`, `DB_USER`, etc.) and connection-string mode (`DATABASE_URL`).
 - When `DATABASE_URL` is present, `setup-db.js` skips `CREATE DATABASE` and only applies schema + seed data.
+- If you see `getaddrinfo ENOTFOUND ...supabase.co`, it means your machine can’t resolve the database hostname (DNS/network/VPN) or the connection string host is incorrect. Re-copy the connection string from Supabase Dashboard → Project Settings → Database (pooler recommended), or switch to local Postgres settings.
 
 ### 3. Create and seed both databases
 Run:
