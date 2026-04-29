@@ -28,6 +28,8 @@ Notes:
 - The backend now supports both local PostgreSQL (`DB_HOST`, `DB_USER`, etc.) and connection-string mode (`DATABASE_URL`).
 - When `DATABASE_URL` is present, `setup-db.js` skips `CREATE DATABASE` and only applies schema + seed data.
 - If you see `getaddrinfo ENOTFOUND ...supabase.co`, it means your machine can’t resolve the database hostname (DNS/network/VPN) or the connection string host is incorrect. Re-copy the connection string from Supabase Dashboard → Project Settings → Database (pooler recommended), or switch to local Postgres settings.
+- If you use `supabase-js` from the frontend, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in your Vercel project env vars.
+- (Recommended) If you enable RLS on Supabase, apply `database/supabase_policies.sql` in the Supabase SQL Editor so authenticated users can read products and admins can write.
 
 ### 3. Create and seed both databases
 Run:
