@@ -10,19 +10,16 @@ export const signIn = async ({ email, password }) => {
     throw new Error(error.message)
   }
 
-  // Get user role from custom metadata or a user table
-  const { data: userData } = await supabase
-    .from('users')
-    .select('*')
-    .eq('email', email)
-    .single()
+  // Get user role from user metadata
+  const role = data.user.user_metadata?.role || 'user'
 
   return {
     token: data.session.access_token,
     user: {
       id: data.user.id,
       email: data.user.email,
-      role: userData?.role || 'user',
+      username: data.user.user_metadata?.username || email.split('@')[0],
+      role: role,
     },
   }
 }
@@ -34,6 +31,7 @@ export const signUp = async ({ email, password, username, role = 'user' }) => {
     options: {
       data: {
         username,
+        role,
       },
     },
   })
@@ -42,23 +40,12 @@ export const signUp = async ({ email, password, username, role = 'user' }) => {
     throw new Error(error.message)
   }
 
-  // Create user record in users table
-  if (data.user) {
-    await supabase.from('users').insert([
-      {
-        id: data.user.id,
-        email,
-        username,
-        role,
-      },
-    ])
-  }
-
   return {
     token: data.session?.access_token,
     user: {
-      id: data.user.id,
-      email: data.user.email,
+      id: data.user?.id,
+      email: data.user?.email,
+      username,
       role,
     },
   }
